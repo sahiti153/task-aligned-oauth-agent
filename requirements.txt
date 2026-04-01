@@ -1,14 +1,12 @@
-# LangChain core
 langchain
 langchain-community
-huggingface_hub
 langchain-huggingface
-
-# Gmail / Google OAuth
+langchain-groq
+langchain-core
+langgraph
+huggingface_hub
 google-auth
 google-auth-oauthlib
 google-auth-httplib2
 google-api-python-client
-
-# Utilities
 python-dotenv
