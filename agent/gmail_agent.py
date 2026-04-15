@@ -24,15 +24,45 @@ agent = create_agent(
     system_prompt="You are a Gmail assistant. Help users manage their email using the available tools."
 )
 
-def run_agent(task: str) -> str:
+def run_agent(task: str, verbose: bool = False):
     """Run the Gmail agent with a given task string."""
-    result = agent.invoke({
-        "messages": [HumanMessage(content=task)]
-    })
+    try:
+        result = agent.invoke(
+            {"messages": [HumanMessage(content=task)]},
+            config={"callbacks": None}
+        )
+        if verbose:
+            print("\n--- Agent Message Chain ---")
+            for msg in result["messages"]:
+                print(f"[{msg.__class__.__name__}]: {msg.content[:200]}")
+            print("--- End Message Chain ---\n")
+        return result
+    except Exception as e:
+        error_msg = str(e)
+        print(f"⚠️  Agent error: {error_msg[:200]}")
+        # Return partial result structure so tool calls can still be inspected
+        return {"messages": [], "error": error_msg}
+
+
+def get_agent_response(result) -> str:
+    """Extract final text response from agent result."""
+    if result is None:
+        return ""
     return result["messages"][-1].content
+
+
+def get_tool_calls(result) -> list:
+    """Extract all tool call outputs from agent result."""
+    if result is None:
+        return []
+    tool_outputs = []
+    for msg in result["messages"]:
+        if msg.__class__.__name__ == "ToolMessage":
+            tool_outputs.append(msg.content)
+    return tool_outputs
 
 
 if __name__ == "__main__":
     print("🤖 Running Gmail agent...")
-    output = run_agent("Read my 3 most recent emails and summarize them.")
-    print("\n✅ Agent output:", output)
+    output = run_agent("Read my 3 most recent emails and summarize them.", verbose=True)
+    print("\n✅ Agent output:", output) 
