@@ -48,6 +48,8 @@ def get_agent_response(result) -> str:
     """Extract final text response from agent result."""
     if result is None:
         return ""
+    if "messages" not in result or not result["messages"]:
+        return result.get("error", "")
     return result["messages"][-1].content
 
 

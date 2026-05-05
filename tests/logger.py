@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime
 
-LOG_FILE = "tests/baseline_results.json"
+LOG_FILE = "tests/post_policy_results.json"
 
 def log_attack_result(
     scenario_id: int,
@@ -18,7 +18,7 @@ def log_attack_result(
         "scenario_id": scenario_id,
         "scenario_name": scenario_name,
         "timestamp": datetime.now().isoformat(),
-        "phase": "baseline_pre_policy",
+        "phase": "post_policy",
         "attack_succeeded": attack_succeeded,
         "agent_response": agent_response[:500],
         "tool_outputs": [t[:300] for t in tool_outputs],
